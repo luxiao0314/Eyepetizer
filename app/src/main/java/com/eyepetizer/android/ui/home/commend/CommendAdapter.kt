@@ -44,7 +44,6 @@ import com.eyepetizer.android.util.GlobalUtil
 import com.shuyu.gsyvideoplayer.GSYVideoManager
 import com.shuyu.gsyvideoplayer.listener.GSYSampleCallBack
 import com.shuyu.gsyvideoplayer.video.base.GSYVideoPlayer
-import jp.wasabeef.glide.transformations.RoundedCornersTransformation
 import org.greenrobot.eventbus.EventBus
 
 class CommendAdapter(val fragment: CommendFragment) : PagingDataAdapter<HomePageRecommend.Item,RecyclerView.ViewHolder>(DIFF_CALLBACK) {
@@ -125,7 +124,7 @@ class CommendAdapter(val fragment: CommendFragment) : PagingDataAdapter<HomePage
                 holder.itemView.setOnClickListener { ActionUrlUtil.process(fragment, item.data.actionUrl, item.data.header.title) }
             }
             is InformationCardFollowCardViewHolder -> {
-                holder.ivCover.load(item.data.backgroundImage, 4f, RoundedCornersTransformation.CornerType.TOP)
+                holder.ivCover.load(item.data.backgroundImage, topLeft = 4f,topRight = 4f)
                 holder.recyclerView.setHasFixedSize(true)
                 if (holder.recyclerView.itemDecorationCount == 0) {
                     holder.recyclerView.addItemDecoration(InformationCardFollowCardItemDecoration())
@@ -158,19 +157,19 @@ class CommendAdapter(val fragment: CommendFragment) : PagingDataAdapter<HomePage
                 item.data.itemList.forEachIndexed { index, it ->
                     when (index) {
                         0 -> {
-                            holder.ivCoverLeft.load(it.data.url, 4f, RoundedCornersTransformation.CornerType.LEFT)
+                            holder.ivCoverLeft.load(it.data.url, topLeft = 4f,bottomLeft = 4f)
                             if (!it.data.urls.isNullOrEmpty() && it.data.urls.size > 1) holder.ivLayersLeft.visible()
                             holder.ivAvatarLeft.load(it.data.userCover)
                             holder.tvNicknameLeft.text = it.data.nickname
                         }
                         1 -> {
-                            holder.ivCoverRightTop.load(it.data.url, 4f, RoundedCornersTransformation.CornerType.TOP_RIGHT)
+                            holder.ivCoverRightTop.load(it.data.url, topRight = 4f)
                             if (!it.data.urls.isNullOrEmpty() && it.data.urls.size > 1) holder.ivLayersRightTop.visible()
                             holder.ivAvatarRightTop.load(it.data.userCover)
                             holder.tvNicknameRightTop.text = it.data.nickname
                         }
                         2 -> {
-                            holder.ivCoverRightBottom.load(it.data.url, 4f, RoundedCornersTransformation.CornerType.BOTTOM_RIGHT)
+                            holder.ivCoverRightBottom.load(it.data.url, bottomRight = 4f)
                             if (!it.data.urls.isNullOrEmpty() && it.data.urls.size > 1) holder.ivLayersRightBottom.visible()
                             holder.ivAvatarRightBottom.load(it.data.userCover)
                             holder.tvNicknameRightBottom.text = it.data.nickname

@@ -20,7 +20,8 @@ import android.content.Context
 import android.view.View
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.bumptech.glide.Glide
+import coil.Coil
+import coil.util.CoilUtils
 import com.eyepetizer.android.Const
 import com.eyepetizer.android.R
 import com.eyepetizer.android.extension.showToast
@@ -85,9 +86,9 @@ class SettingViewModel : ViewModel() {
     private fun clearAllCache(context: Context) {
         viewModelScope.launch(Dispatchers.Main) {
             GSYVideoManager.instance().clearAllDefaultCache(context)
-            Glide.get(context).clearMemory()
+//            Glide.get(context).clearMemory()
             withContext(Dispatchers.IO) {
-                Glide.get(context).clearDiskCache()
+//                Glide.get(context).clearDiskCache()
                 if (SonicEngine.isGetInstanceAllowed()) {
                     SonicEngine.getInstance().cleanCache()
                 }

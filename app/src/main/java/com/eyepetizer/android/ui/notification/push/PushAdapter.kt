@@ -23,6 +23,7 @@ import android.widget.TextView
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import coil.load
 import com.eyepetizer.android.R
 import com.eyepetizer.android.extension.inflate
 import com.eyepetizer.android.extension.load

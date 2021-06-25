@@ -17,33 +17,33 @@
 package com.eyepetizer.android.extension
 
 import android.widget.ImageView
-import com.bumptech.glide.Glide
-import com.bumptech.glide.request.RequestOptions
+import coil.load
+import coil.transform.RoundedCornersTransformation
 import com.eyepetizer.android.R
-import jp.wasabeef.glide.transformations.RoundedCornersTransformation
 
 /**
- * Glide加载图片，可以指定圆角弧度。
+ * 加载图片，可以指定圆角弧度。
  *
  * @param url 图片地址
- * @param round 圆角，单位dp
- * @param cornerType 圆角角度
  */
-fun ImageView.load(url: String, round: Float = 0f, cornerType: RoundedCornersTransformation.CornerType = RoundedCornersTransformation.CornerType.ALL) {
-    if (round == 0f) {
-        Glide.with(this.context).load(url).into(this)
-    } else {
-        val option = RequestOptions.bitmapTransform(RoundedCornersTransformation(dp2px(round), 0, cornerType)).placeholder(R.drawable.shape_album_loading_bg)
-        Glide.with(this.context).load(url).apply(option).into(this)
+fun ImageView.load(url: String, topLeft: Float = 0f, bottomLeft: Float = 0f, topRight: Float = 0f, bottomRight: Float = 0f) {
+    load(url) {
+        crossfade(true)
+        placeholder(R.drawable.shape_album_loading_bg)
+        transformations(RoundedCornersTransformation(topLeft,topRight, bottomLeft, bottomRight))
     }
 }
 
 /**
- * Glide加载图片，可以定义配置参数。
+ * 加载图片，可以指定圆角弧度。
  *
  * @param url 图片地址
- * @param options 配置参数
+ * @param round 圆角，单位dp
  */
-fun ImageView.load(url: String, options: RequestOptions.() -> RequestOptions) {
-    Glide.with(this.context).load(url).apply(RequestOptions().options()).into(this)
+fun ImageView.load(url: String, round: Float = 0f) {
+    load(url) {
+        crossfade(true)
+        placeholder(R.drawable.shape_album_loading_bg)
+        transformations(RoundedCornersTransformation(round))
+    }
 }

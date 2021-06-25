@@ -32,7 +32,6 @@ import com.eyepetizer.android.ui.login.LoginActivity
 import com.eyepetizer.android.ui.newdetail.NewDetailActivity
 import com.eyepetizer.android.util.ActionUrlUtil
 import com.eyepetizer.android.util.GlobalUtil
-import jp.wasabeef.glide.transformations.RoundedCornersTransformation
 
 class DailyAdapter(val fragment: DailyFragment) : PagingDataAdapter<Daily.Item, RecyclerView.ViewHolder>(DIFF_CALLBACK) {
 
@@ -107,7 +106,7 @@ class DailyAdapter(val fragment: DailyFragment) : PagingDataAdapter<Daily.Item, 
                 }
             }
             is InformationCardFollowCardViewHolder -> {
-                holder.ivCover.load(item.data.backgroundImage, 4f, RoundedCornersTransformation.CornerType.TOP)
+                holder.ivCover.load(item.data.backgroundImage, topRight = 4f,topLeft = 4f)
                 holder.recyclerView.setHasFixedSize(true)
                 if (holder.recyclerView.itemDecorationCount == 0) {
                     holder.recyclerView.addItemDecoration(CommendAdapter.InformationCardFollowCardItemDecoration())
