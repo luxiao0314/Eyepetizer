@@ -13,32 +13,6 @@ class StatisticPlugin implements Plugin<Project> {
     public static Map<String, BuryPointEntity> BURY_POINT_MAP
     public static List<MethodTimerEntity> METHOD_TIMER_LIST
 
-//    @Override
-//    void apply(Project project) {
-//        def android = project.extensions.findByType(AppExtension.class)
-//
-//        // 获取gradle里面配置的埋点信息
-//        def statisticExtension = project.extensions.create('statistic', StatisticExtension)
-//        // 获取方法计时信息，将其保存在METHOD_TIMER_LIST方便调用
-//        METHOD_TIMER_LIST = new ArrayList<>()
-//        def methodTimer = statisticExtension.getMethodTimer()
-//        if (methodTimer != null) {
-//            methodTimer.each { Map<String, Object> map ->
-//                MethodTimerEntity entity = new MethodTimerEntity()
-//                if (map.containsKey("time")) {
-//                    entity.time = map.get("time")
-//                }
-//                if (map.containsKey("owner")) {
-//                    entity.owner = map.get("owner")
-//                }
-//                METHOD_TIMER_LIST.add(entity)
-//            }
-//        }
-//
-//        // 注册方法耗时Transform
-//        android.registerTransform(new MethodTimerTransform())
-//    }
-
     @Override
     void apply(Project project) {
         def android = project.extensions.findByType(AppExtension)

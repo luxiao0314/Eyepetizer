@@ -42,7 +42,7 @@ class MethodTimerClassVisitor extends ClassVisitor {
     MethodVisitor visitMethod(int methodAccess, String methodName, String methodDescriptor, String signature, String[] exceptions) {
         MethodVisitor methodVisitor = super.visitMethod(methodAccess, methodName, methodDescriptor, signature, exceptions)
         if ((methodAccess & Opcodes.ACC_INTERFACE) == 0 && "<init>" != methodName && "<clinit>" != methodName) {
-            methodVisitor = new MethodTimerAdviceAdapter(api, methodVisitor, methodOwner, methodAccess, methodName, methodDescriptor)
+            methodVisitor = new MethodTimerAdapter(api, methodVisitor, methodOwner, methodAccess, methodName, methodDescriptor)
         }
         return methodVisitor
     }

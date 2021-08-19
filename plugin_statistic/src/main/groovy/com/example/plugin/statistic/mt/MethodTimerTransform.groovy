@@ -184,6 +184,7 @@ class MethodTimerTransform extends Transform {
     static boolean filterClass(String name) {
         return (name.endsWith(".class")
                 && !name.startsWith("R\$")
+                && !name.contains("MethodHook")
                 && "R.class" != name
                 && "BuildConfig.class" != name)
     }
