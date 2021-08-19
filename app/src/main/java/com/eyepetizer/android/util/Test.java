@@ -1,16 +1,24 @@
 package com.eyepetizer.android.util;
 
+import com.miqt.pluginlib.tools.MethodHookHandler;
+
 public class Test {
 
-    public static void main(String[] args) {
-        long startTime = System.currentTimeMillis();
+    public void main(String[] args) {
+        MethodHookHandler.enter("", "", "", "", "");
         String str = "--- I'm the code line ---";
-        long endTime = System.currentTimeMillis();
-        long time = endTime - startTime;
-        if(time > 500){
-            System.out.println("程序运行时间： " + time + "ms");
-        }
+        MethodHookHandler.exit("", "", "", "", "", "");
     }
+
+//    public static void main(String[] args) {
+//        long startTime = System.currentTimeMillis();
+//        String str = "--- I'm the code line ---";
+//        long endTime = System.currentTimeMillis();
+//        long time = endTime - startTime;
+//        if(time > 500){
+//            System.out.println("程序运行时间： " + time + "ms");
+//        }
+//    }
 
 }
 /*

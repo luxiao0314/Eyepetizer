@@ -27,7 +27,7 @@ uploadArchives {
         mavenDeployer {
             pom.groupId = 'com.example.plugin'
             pom.artifactId = 'statistic'
-            pom.version = '1.0.2'
+            pom.version = '1.0.5'
             // maven本地仓库的目录
             repository(url: uri('../repos'))
         }

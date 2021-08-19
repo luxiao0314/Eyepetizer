@@ -6,9 +6,9 @@ apply plugin: 'kotlin-parcelize'
 
 apply plugin: 'kotlin-kapt'
 
-apply plugin: 'com.miqt.plugin.hookmethod'
+//apply plugin: 'com.miqt.plugin.hookmethod'
 
-//apply plugin: 'statistic'
+apply plugin: 'statistic'
 
 android {
     compileSdkVersion 29
@@ -133,30 +133,30 @@ dependencies {
 //    implementation 'com.miqt:hook-method-lib:0.3.5'
 }
 
-hook_method {
-    //插桩白名单正则 .* 匹配所有
-    classWhiteListRegex = [".*"]
-    //是否关注jar包
-    injectJar = false
-    //是否启用
-    enable = true
-    //是否只是在debug运行时启用
-    justDebug = false
-    //自定义 hook method 接受类
-    impl = ""
-}
-
-//statistic {
-//    methodTimer = [
-//            [
-//                    // 打印大于time的方法
-//                    'time' : 5L,
-//                    // 需要打印方法的范围
-//                    'owner': 'com/eyepetizer',
-//            ],
-//            [
-//                    'time' : 5L,
-//                    'owner': 'com/google',
-//            ]
-//    ]
+//hook_method {
+//    //插桩白名单正则 .* 匹配所有
+//    classWhiteListRegex = [".*"]
+//    //是否关注jar包
+//    injectJar = false
+//    //是否启用
+//    enable = true
+//    //是否只是在debug运行时启用
+//    justDebug = false
+//    //自定义 hook method 接受类
+//    impl = ""
 //}
+
+statistic {
+    methodTimer = [
+            [
+                    // 打印大于time的方法
+                    'time' : 5L,
+                    // 需要打印方法的范围
+                    'owner': 'com/eyepetizer',
+            ],
+            [
+                    'time' : 5L,
+                    'owner': 'com/google',
+            ]
+    ]
+}
