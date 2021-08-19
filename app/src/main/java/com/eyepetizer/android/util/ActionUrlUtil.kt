@@ -27,8 +27,12 @@ import com.eyepetizer.android.ui.common.ui.WebViewActivity
 import com.eyepetizer.android.ui.home.daily.DailyFragment
 import com.eyepetizer.android.ui.newdetail.NewDetailActivity
 import com.eyepetizer.android.ui.notification.push.PushFragment
+import okio.buffer
+import okio.sink
 import org.greenrobot.eventbus.EventBus
+import java.io.File
 import java.net.URLDecoder
+import java.nio.charset.Charset
 
 /**
  * actionUrl事件处理工具类。通过截取actionUrl相关信息，并进行相应事件处理。
