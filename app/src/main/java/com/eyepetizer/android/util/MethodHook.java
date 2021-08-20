@@ -3,22 +3,22 @@ package com.eyepetizer.android.util;
 import android.os.SystemClock;
 import android.util.Log;
 
+import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 public class MethodHook {
 
-    private static final Map<String, Long> times = new ConcurrentHashMap<>();
-
-    private static Long startTime = 0L;
+    private static final Map<String, Long> times = new LinkedHashMap<>();
 
     public static void enter(Object thisObj, String className, String methodName, String argsType, String returnType, Object... args) {
-        startTime = SystemClock.elapsedRealtime();
+        times.put(className + methodName, SystemClock.elapsedRealtime());
     }
 
     public static void exit(Object thisObj, String className, String methodName, String argsType, String returnType, Object... args) {
 
-        long duc = SystemClock.elapsedRealtime() - startTime;
+        Long time = times.get(className + methodName);
+
+        long duc = SystemClock.elapsedRealtime() - time;
 
         String value = (thisObj == null ? className : className + "@" + Integer.toHexString(System.identityHashCode(thisObj))) + "." + methodName + "():[" + duc + "ms]";
 
