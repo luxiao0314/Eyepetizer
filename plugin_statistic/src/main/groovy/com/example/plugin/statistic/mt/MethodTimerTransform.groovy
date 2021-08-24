@@ -101,7 +101,7 @@ class MethodTimerTransform extends Transform {
                 def name = file.absolutePath
                 if (filterClass(name)) {
                     ClassReader classReader = new ClassReader(file.bytes)
-                    ClassWriter classWriter = new ClassWriter(classReader, ClassWriter.COMPUTE_MAXS)
+                    ClassWriter classWriter = new ClassWriter(classReader, ClassWriter.COMPUTE_MAXS)    //COMPUTE_MAXS: 它会自动帮我们重新计算 stackSize,否则会报错Exceeded max stack size.
                     ClassVisitor classVisitor = new MethodTimerClassVisitor(classWriter)
                     classReader.accept(classVisitor, ClassReader.EXPAND_FRAMES)
                     byte[] code = classWriter.toByteArray()
