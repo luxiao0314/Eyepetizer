@@ -1,10 +1,11 @@
 package com.example.plugin.statistic.mt
 
+import com.example.plugin.statistic.StatisticPlugin
 import org.objectweb.asm.*
 
 class MethodTimerClassVisitor extends ClassVisitor {
 
-    String methodOwner
+    String className
 
     MethodTimerClassVisitor(ClassVisitor classVisitor) {
         super(Opcodes.ASM7, classVisitor)
@@ -21,7 +22,7 @@ class MethodTimerClassVisitor extends ClassVisitor {
     @Override
     void visit(int version, int access, String name, String signature, String superName, String[] interfaces) {
         super.visit(version, access, name, signature, superName, interfaces)
-        this.methodOwner = name
+        this.className = name
     }
 
     @Override
@@ -42,7 +43,11 @@ class MethodTimerClassVisitor extends ClassVisitor {
     MethodVisitor visitMethod(int methodAccess, String methodName, String methodDescriptor, String signature, String[] exceptions) {
         MethodVisitor methodVisitor = super.visitMethod(methodAccess, methodName, methodDescriptor, signature, exceptions)
         if ((methodAccess & Opcodes.ACC_INTERFACE) == 0 && "<init>" != methodName && "<clinit>" != methodName) {
-            methodVisitor = new MethodTimerAdapter(api, methodVisitor, methodOwner, methodAccess, methodName, methodDescriptor)
+            if (StatisticPlugin.statisticExtension.time == -1) {
+                methodVisitor = new MethodTimerAdapter(api, methodVisitor, className, methodAccess, methodName, methodDescriptor)
+            } else {
+                methodVisitor = new MethodTimerAdviceAdapter(api, methodVisitor, className, methodAccess, methodName, methodDescriptor)
+            }
         }
         return methodVisitor
     }

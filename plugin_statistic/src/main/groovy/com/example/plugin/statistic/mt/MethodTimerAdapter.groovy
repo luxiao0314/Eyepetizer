@@ -2,77 +2,92 @@ package com.example.plugin.statistic.mt
 
 import com.example.plugin.statistic.StatisticPlugin
 import org.objectweb.asm.MethodVisitor
+import org.objectweb.asm.Opcodes
 import org.objectweb.asm.Type
 import org.objectweb.asm.commons.AdviceAdapter
+
+import java.util.regex.Pattern
 
 /**
  * 调用外部方法,自己实现打印
  */
 class MethodTimerAdapter extends AdviceAdapter {
 
-    String methodOwner
+    String className
     String methodName
     String desc
+    String impl = StatisticPlugin.statisticExtension.impl.replace(".", "/")
+    boolean isNull = false
 
     MethodTimerAdapter(int api, MethodVisitor methodVisitor, String owner, int access, String name, String desc) {
         super(api, methodVisitor, access, name, desc)
-        this.methodOwner = owner
+        this.className = owner
         this.methodName = name
         this.desc = desc
+
+        def isInit = name == "<init>"
+        def isStaticInit = name == "<clinit>"
+        def isStatic = (access & ACC_STATIC) != 0
+
+        isNull = isStatic || isInit || isStaticInit
     }
 
     @Override
     protected void onMethodEnter() {
         super.onMethodEnter()
-        for (MethodTimerEntity entity : StatisticPlugin.METHOD_TIMER_LIST) {
-            if (methodOwner.contains(entity.getOwner())) {
+        if (isInject(className)) {
 
-                mv.visitLdcInsn("")
-//                mv.visitVarInsn(ALOAD, 0)//this
-                mv.visitLdcInsn(methodOwner)//className
-                mv.visitLdcInsn(methodName)//methodbName
-                mv.visitLdcInsn(getArgsType(Type.getArgumentTypes(desc)))//argsTypes
-                mv.visitLdcInsn(returnType.className)//returntype
-                mv.visitInsn(ICONST_0)
-                mv.visitTypeInsn(ANEWARRAY, "java/lang/Object")
-                mv.visitMethodInsn(INVOKESTATIC, "com/eyepetizer/android/util/MethodHook", "enter",
-                        "(" +
-                                "Ljava/lang/Object;" +
-                                "Ljava/lang/String;" +
-                                "Ljava/lang/String;" +
-                                "Ljava/lang/String;" +
-                                "Ljava/lang/String;" +
-                                "[Ljava/lang/Object;" +
-                                ")V",
-                        false)
+            if (isNull) {
+                mv.visitInsn(ACONST_NULL)//null
+            } else {
+                mv.visitVarInsn(ALOAD, 0)//this
             }
+
+            mv.visitLdcInsn(className)//className
+            mv.visitLdcInsn(methodName)//methodbName
+            mv.visitLdcInsn(getArgsType(Type.getArgumentTypes(desc)))//argsTypes
+            mv.visitLdcInsn(returnType.className)//returntype
+            mv.visitInsn(ICONST_0)
+            mv.visitTypeInsn(ANEWARRAY, "java/lang/Object")
+            mv.visitMethodInsn(INVOKESTATIC, impl, "enter",
+                    "(" +
+                            "Ljava/lang/Object;" +
+                            "Ljava/lang/String;" +
+                            "Ljava/lang/String;" +
+                            "Ljava/lang/String;" +
+                            "Ljava/lang/String;" +
+                            "[Ljava/lang/Object;" +
+                            ")V",
+                    false)
         }
     }
 
     @Override
     void onMethodExit(int opcode) {
-        for (MethodTimerEntity entity : StatisticPlugin.METHOD_TIMER_LIST) {
-            if (methodOwner.contains(entity.getOwner())) {
+        if (isInject(className)) {
 
-//                mv.visitVarInsn(ALOAD, 0)//this
-                mv.visitLdcInsn("")
-                mv.visitLdcInsn(methodOwner)//className
-                mv.visitLdcInsn(methodName)//methodbName
-                mv.visitLdcInsn(getArgsType(Type.getArgumentTypes(desc)))//argsTypes
-                mv.visitLdcInsn(returnType.className)//returntype
-                mv.visitInsn(ICONST_0)
-                mv.visitTypeInsn(ANEWARRAY, "java/lang/Object")
-                mv.visitMethodInsn(INVOKESTATIC, "com/eyepetizer/android/util/MethodHook", "exit",
-                        "(" +
-                                "Ljava/lang/Object;" + //this
-                                "Ljava/lang/String;" +
-                                "Ljava/lang/String;" +
-                                "Ljava/lang/String;" +
-                                "Ljava/lang/String;" +
-                                "[Ljava/lang/Object;" +//prams
-                                ")V",
-                        false)
+            if (isNull) {
+                mv.visitInsn(ACONST_NULL)//null
+            } else {
+                mv.visitVarInsn(ALOAD, 0)//this
             }
+
+            mv.visitLdcInsn(className)//className
+            mv.visitLdcInsn(methodName)//methodbName
+            mv.visitLdcInsn(getArgsType(Type.getArgumentTypes(desc)))//argsTypes
+            mv.visitLdcInsn(returnType.className)//returntype
+            mv.visitInsn(ICONST_0)
+            mv.visitTypeInsn(ANEWARRAY, "java/lang/Object")
+            mv.visitMethodInsn(INVOKESTATIC, impl, "exit",
+                    "(" +
+                            "Ljava/lang/Object;" + //this
+                            "Ljava/lang/String;" +
+                            "Ljava/lang/String;" +
+                            "Ljava/lang/String;" +
+                            "Ljava/lang/String;" +
+                            "[Ljava/lang/Object;" +//prams
+                            ")V",
+                    false)
         }
         super.onMethodExit(opcode)
     }
@@ -93,5 +108,15 @@ class MethodTimerAdapter extends AdviceAdapter {
                 return b.append(']').toString()
             b.append(", ")
         }
+    }
+
+    //优先级 是否启用，注解，类名白名单
+    static boolean isInject(String className) {
+        for (String value : StatisticPlugin.statisticExtension.classWhiteListRegex) {
+            if (className.contains(value)) {
+                return true
+            }
+        }
+        return false
     }
 }

@@ -26,6 +26,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.eyepetizer.android.R
+import com.eyepetizer.android.asm.TestAnnotation
 import com.eyepetizer.android.databinding.FragmentRefreshLayoutBinding
 import com.eyepetizer.android.event.MessageEvent
 import com.eyepetizer.android.event.RefreshEvent
@@ -106,6 +107,7 @@ class DiscoveryFragment : BaseFragment() {
         }
     }
 
+    @TestAnnotation
     private fun addLoadStateListener() {
         adapter.addLoadStateListener {
             when (it.refresh) {

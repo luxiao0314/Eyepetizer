@@ -3,7 +3,6 @@ package com.example.plugin.statistic
 import com.android.build.gradle.AppExtension
 import com.example.plugin.statistic.bp.BuryPointEntity
 import com.example.plugin.statistic.bp.BuryPointTransform
-import com.example.plugin.statistic.mt.MethodTimerEntity
 import com.example.plugin.statistic.mt.MethodTimerTransform
 import org.gradle.api.Plugin
 import org.gradle.api.Project
@@ -11,16 +10,18 @@ import org.gradle.api.Project
 class StatisticPlugin implements Plugin<Project> {
 
     public static Map<String, BuryPointEntity> BURY_POINT_MAP
-    public static List<MethodTimerEntity> METHOD_TIMER_LIST
+    static StatisticExtension statisticExtension
 
     @Override
     void apply(Project project) {
+        // 获取gradle里面配置的埋点信息
+        statisticExtension = project.extensions.create('statistic', StatisticExtension)
+
         def android = project.extensions.findByType(AppExtension)
         // 注册Transform
         android.registerTransform(new BuryPointTransform())
         android.registerTransform(new MethodTimerTransform())
-        // 获取gradle里面配置的埋点信息
-        def statisticExtension = project.extensions.create('statistic', StatisticExtension)
+
         project.afterEvaluate {
             // 遍历配置的埋点信息，将其保存在BURY_POINT_MAP方便调用
             BURY_POINT_MAP = new HashMap<>()
@@ -63,21 +64,6 @@ class StatisticPlugin implements Plugin<Project> {
                         }
                         BURY_POINT_MAP.put(entity.methodName + entity.methodDesc, entity)
                     }
-                }
-            }
-            // 获取方法计时信息，将其保存在METHOD_TIMER_LIST方便调用
-            METHOD_TIMER_LIST = new ArrayList<>()
-            def methodTimer = statisticExtension.getMethodTimer()
-            if (methodTimer != null) {
-                methodTimer.each { Map<String, Object> map ->
-                    MethodTimerEntity entity = new MethodTimerEntity()
-                    if (map.containsKey("time")) {
-                        entity.time = map.get("time")
-                    }
-                    if (map.containsKey("owner")) {
-                        entity.owner = map.get("owner")
-                    }
-                    METHOD_TIMER_LIST.add(entity)
                 }
             }
         }

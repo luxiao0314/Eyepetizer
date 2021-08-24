@@ -4,6 +4,7 @@ import com.android.annotations.NonNull
 import com.android.annotations.Nullable
 import com.android.build.api.transform.*
 import com.android.build.gradle.internal.pipeline.TransformManager
+import com.example.plugin.statistic.StatisticPlugin
 import org.apache.commons.codec.digest.DigestUtils
 import org.apache.commons.io.FileUtils
 import org.apache.commons.io.IOUtils
@@ -97,14 +98,14 @@ class MethodTimerTransform extends Transform {
         if (directoryInput.file.isDirectory()) {
             //列出目录所有文件（包含子文件夹，子文件夹内文件）
             directoryInput.file.eachFileRecurse { File file ->
-                def name = file.name
+                def name = file.absolutePath
                 if (filterClass(name)) {
                     ClassReader classReader = new ClassReader(file.bytes)
                     ClassWriter classWriter = new ClassWriter(classReader, ClassWriter.COMPUTE_MAXS)
                     ClassVisitor classVisitor = new MethodTimerClassVisitor(classWriter)
                     classReader.accept(classVisitor, ClassReader.EXPAND_FRAMES)
                     byte[] code = classWriter.toByteArray()
-                    FileOutputStream fos = new FileOutputStream(file.parentFile.absolutePath + File.separator + name)
+                    FileOutputStream fos = new FileOutputStream(file.parentFile.absolutePath + File.separator + file.name)
                     fos.write(code)
                     fos.close()
                 }
@@ -182,11 +183,11 @@ class MethodTimerTransform extends Transform {
      * @return
      */
     static boolean filterClass(String name) {
+        println("filterClass: " + name)
         return (name.endsWith(".class")
                 && !name.startsWith("R\$")
-                && !name.contains("MethodHook")
+                && !name.contains(StatisticPlugin.statisticExtension.impl.replace(".", "/"))
                 && "R.class" != name
                 && "BuildConfig.class" != name)
     }
-
 }
