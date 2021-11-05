@@ -19,6 +19,7 @@ package com.eyepetizer.android.ui
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.os.SystemClock
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import androidx.work.WorkInfo
@@ -107,6 +108,9 @@ class MainActivity : BaseActivity() {
             }
         }
         setTabSelection(0)
+
+        //测试blockCanary是否生效
+//        SystemClock.sleep(3000)
     }
 
     override fun onMessageEvent(messageEvent: MessageEvent) {
