@@ -46,6 +46,7 @@ object ServiceCreator {
         .addInterceptor(LoggingInterceptor())
         .addInterceptor(HeaderInterceptor())
         .addInterceptor(BasicParamsInterceptor())
+        .eventListenerFactory(OkhttpEventListener.FACTORY)
         .build()
 
     private val builder = Retrofit.Builder()
